@@ -151,5 +151,8 @@ def handle(text: str, min_v: int, max_v: int):
     """
     for handler in handlers:
         if handler.can_handle(text):
-            return handler.handle(text, min_v, max_v)
+            try:
+                return handler.handle(text, min_v, max_v)
+            except ValueError:
+                return []
     return []
