@@ -7,6 +7,7 @@
 ### Installing
 ```shell
 conda create -n homework python=3.8
+cd
 git clone https://github.com/stannko/CronParser.git
 ```
 ### Running

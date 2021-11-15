@@ -3,8 +3,8 @@ cron-explain() {
         echo 'Invalid arguments. Try passing cron expression in ""'
     else
         conda activate ${CONDA_DEFAULT_ENV}
-        script=${HOME}/code/misc/CronParser/main.py
-        PYTHONPATH=${HOME}/code/misc/CronParser \
+        script=${HOME}/CronParser/main.py
+        PYTHONPATH=${HOME}/CronParser \
         python ${script} --expression="$@"
 	fi
 }
