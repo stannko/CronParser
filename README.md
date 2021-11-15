@@ -1,17 +1,17 @@
 # CRON expression parser.
 
 ### Prerequisites
-* [Anaconda](https://www.anaconda.com/download/) - Python platform.
+* [conda](https://www.anaconda.com/download/) - Python platform.
 * [Python 3](https://www.python.org/) - Programming language.
 
 ### Installing
-
-Clone & Run
-
-```
-cd
+```shell
+conda create -n homework python=3.8
 git clone https://github.com/stannko/CronParser.git
+```
+### Running
+```shell
 source CronParse/script.sh
-conda activate <<py3_env_name>>
+conda activate homework
 cron-explain "*/15 0 1,15 * 1-5 /usr/bin/find"
 ```
