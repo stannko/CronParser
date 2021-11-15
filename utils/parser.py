@@ -4,17 +4,17 @@ from utils.handlers import handle
 
 malformed_message = "Malformed CRON expression"
 
-Corner = namedtuple('Bound', ['Min', 'Max'])
+Bound = namedtuple('Bound', ['Min', 'Max'])
 
 
 class Bounds(object):
     """ Min and max values for every element.
     """
-    Minute = Corner(0, 60)
-    Hour = Corner(0, 24)
-    DayOfMonth = Corner(1, 31)
-    Month = Corner(1, 13)
-    DayOfWeek = Corner(1, 8)
+    Minute = Bound(0, 60)
+    Hour = Bound(0, 24)
+    DayOfMonth = Bound(1, 32)
+    Month = Bound(1, 13)
+    DayOfWeek = Bound(0, 7)
 
 
 # Labels to display.

@@ -1,4 +1,5 @@
 from abc import abstractmethod, ABCMeta
+from collections import Counter
 from typing import List
 
 
@@ -44,17 +45,60 @@ class SimpleIntHandler(ParseHandler):
 
 class RangeHandler(ParseHandler):
     """
-    Handles expressions like "1-5"
+    Handles expressions like "1-5/2".
+
+    Works exactly the same way as python's slicing. eg. [1:5:2]
     """
 
+    @staticmethod
+    def _is_valid_text(text):
+        """ Checks if the expression is not malformed.
+
+        :param text: Expression.
+        :return: If expression is valid.
+        """
+        counter = Counter(text)
+        if counter['-'] > 1:
+            return False
+        if counter['*'] > 1:
+            return False
+        if counter['/'] > 1:
+            return False
+        if '*' in text and text.index('*') != 0:
+            return False
+        if '-' in text and text.index('-') == 0:
+            return False
+        if text != "*" and not text.replace("*", "").replace("/", "").replace("-", "").isdigit():
+            return False
+
+        return True
+
     def can_handle(self, text: str):
-        return '-' in text and text.replace('-', "").isdigit()
+        return ('-' in text or '*' in text) and self._is_valid_text(text)
 
     def handle(self, text: str, min_v: int, max_v: int) -> List[int]:
-        parts = text.split('-')
-        start, end = int(parts[0]), int(parts[1]) + 1
+        step = 1
+        start = min_v
+        end = max_v
+
+        # Step is present in expression
+        if "/" in text:
+            # Split range and step
+            parts = text.split("/")
+            if len(parts) != 2:
+                return []
+
+            text = parts[0]
+            step = int(parts[1])
+
+        if text != '*':
+            # Range was passed
+            parts = text.split('-')
+            start, end = int(parts[0]), int(parts[1]) + 1
+
         if min_v <= start <= end <= max_v:
-            return list(range(start, end))
+            return list(range(start, end, step))
+
         return []
 
 
@@ -69,35 +113,9 @@ class EnumerationHandler(ParseHandler):
     def handle(self, text: str, min_v: int, max_v: int) -> List[int]:
         parts = text.split(',')
         parts = [int(p) for p in parts]
-        if all(min_v <= p <= max_v for p in parts):
+        if all(min_v <= p < max_v for p in parts):
             return parts
         return []
-
-
-class AsteriskHandler(ParseHandler):
-    """
-        Handles expression "*"
-    """
-
-    def can_handle(self, text: str):
-        return text == '*'
-
-    def handle(self, text: str, min_v: int, max_v: int) -> List[int]:
-        return list(range(min_v, max_v))
-
-
-class PartitionHandler(ParseHandler):
-    """
-        Handles expressions like "*/15"
-    """
-
-    def can_handle(self, text: str):
-        return '*/' in text and text[2:].isdigit()
-
-    def handle(self, text: str, min_v: int, max_v: int) -> List[int]:
-        division = int(text.replace('*/', ""))
-        items = list(range(min_v, max_v))
-        return items[::division]
 
 
 class MalformedHandler(ParseHandler):
@@ -117,8 +135,6 @@ handlers = [
     SimpleIntHandler(),
     RangeHandler(),
     EnumerationHandler(),
-    AsteriskHandler(),
-    PartitionHandler(),
     MalformedHandler(),
 ]
 
