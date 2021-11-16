@@ -6,5 +6,5 @@ cron-explain() {
         script=${HOME}/CronParser/main.py
         PYTHONPATH=${HOME}/CronParser \
         python ${script} --expression="$@"
-	fi
+    fi
 }
