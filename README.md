@@ -12,6 +12,6 @@ git clone https://github.com/stannko/CronParser.git
 ```
 ### Running
 ```shell
-source CronParse/script.sh
+source CronParser/script.sh
 cron-explain "*/15 0 1,15 * 1-5 /usr/bin/find"
 ```

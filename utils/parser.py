@@ -1,4 +1,5 @@
 from collections import namedtuple
+from typing import List
 
 from utils.handlers import handle
 
@@ -44,7 +45,12 @@ class CronExpression(object):
         self.lines = self._build()
         self.correct = all(self.lines)
 
-    def _build(self):
+    def _build(self) -> List[List[str]]:
+        """
+        Builds an explanation of a cron expression in a raw form of integers.
+
+        :return: A 2D list of integers representing times.
+        """
         return [
             handle(self.minute, min_v=Bounds.Minute.Min, max_v=Bounds.Minute.Max),
             handle(self.hour, min_v=Bounds.Hour.Min, max_v=Bounds.Hour.Max),
@@ -61,6 +67,11 @@ class CronExpression(object):
 
 
 def explain(expression: str) -> str:
+    """
+    Returns a friendly explanation of a cron expression.
+    :param expression: cron expression.
+    :return: Friendly explanation.
+    """
     parts = expression.split(' ')
 
     # Support of exactly 6 elements.

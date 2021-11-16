@@ -24,7 +24,7 @@ class ParseHandler(metaclass=ABCMeta):
 
         :param text: Element of cron expression.
         :param min_v: Minimal acceptable value.
-        :param max_v: Maximal acceptable value
+        :param max_v: Maximal acceptable value.
         :return: List of values matching cron expression.
         """
         pass
@@ -32,7 +32,7 @@ class ParseHandler(metaclass=ABCMeta):
 
 class SimpleIntHandler(ParseHandler):
     """
-    Handles expressions like "0"
+    Handles expressions like "0".
     """
 
     def can_handle(self, text: str):
@@ -46,7 +46,6 @@ class SimpleIntHandler(ParseHandler):
 class RangeHandler(ParseHandler):
     """
     Handles expressions like "1-5/2".
-
     Works exactly the same way as python's slicing. eg. [1:5:2]
     """
 
@@ -139,15 +138,15 @@ handlers = [
 ]
 
 
-def handle(text: str, min_v: int, max_v: int):
-    """ Handles passed expression.
-
+def handle(text: str, min_v: int, max_v: int) -> List[int]:
+    """
+    Handles passed expression.
     Iterates over available handlers.
 
     :param text: Element of cron expression.
     :param min_v: Minimal acceptable value.
-    :param max_v: Maximal acceptable value
-    :return:
+    :param max_v: Maximal acceptable value.
+    :return: A list of matching times represented as int.
     """
     for handler in handlers:
         if handler.can_handle(text):
