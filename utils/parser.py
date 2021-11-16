@@ -22,7 +22,7 @@ class Bounds(object):
 labels = [
     "minute",
     "hour",
-    "day_of_month",
+    "day of month",
     "month",
     "day of week",
     "command",
