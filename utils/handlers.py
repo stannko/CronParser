@@ -73,32 +73,46 @@ class RangeHandler(ParseHandler):
         return True
 
     def can_handle(self, text: str):
-        return ('-' in text or '*' in text) and self._is_valid_text(text)
+        return '-' in text or '*' in text or ',' in text
 
     def handle(self, text: str, min_v: int, max_v: int) -> List[int]:
-        step = 1
-        start = min_v
-        end = max_v
+        tokens = text.split(",")
 
-        # Step is present in expression
-        if "/" in text:
-            # Split range and step
-            parts = text.split("/")
-            if len(parts) != 2:
-                return []
+        result = []
 
-            text = parts[0]
-            step = int(parts[1])
+        for token in tokens:
+            if token.isdigit():
+                value = int(token)
+                if min_v <= value < max_v:
+                    result.append(value)
+                else:
+                    return []
+            else:
+                step = 1
+                start = min_v
+                end = max_v
 
-        if text != '*':
-            # Range was passed
-            parts = text.split('-')
-            start, end = int(parts[0]), int(parts[1]) + 1
+                # Step is present in expression
+                if "/" in token:
+                    # Split range and step
+                    parts = token.split("/")
+                    if len(parts) != 2:
+                        return []
 
-        if min_v <= start <= end <= max_v:
-            return list(range(start, end, step))
+                    token = parts[0]
+                    step = int(parts[1])
 
-        return []
+                if token != '*':
+                    # Range was passed
+                    parts = token.split('-')
+                    start, end = int(parts[0]), int(parts[1]) + 1
+
+                if min_v <= start <= end <= max_v:
+                    result.extend(range(start, end, step))
+                else:
+                    return []
+
+        return result
 
 
 class EnumerationHandler(ParseHandler):

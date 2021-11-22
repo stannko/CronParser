@@ -17,6 +17,8 @@ class TestHandlerParser(unittest.TestCase):
         ('1-5', [1, 2, 3, 4, 5], Bounds.DayOfWeek),
         ('0-6', [0, 1, 2, 3, 4, 5, 6], Bounds.DayOfWeek),
         ('2-6/2', [2, 4, 6], Bounds.DayOfWeek),
+        ('2,4-6,8-10/2', [2, 4, 5, 6, 8, 10], Bounds.DayOfMonth),
+
     ])
     def test_correct_data(self, expression: str, expected: str, corner):
         min_v, max_v = corner
